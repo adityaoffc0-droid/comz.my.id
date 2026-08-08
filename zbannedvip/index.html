@@ -1,0 +1,1871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>MobileCodes</title>
+
+<!-- CodeMirror core -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/dialog/dialog.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/fold/foldgutter.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/hint/show-hint.min.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/xml/xml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/htmlmixed/htmlmixed.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/css/css.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/clike/clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/php/php.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/sql/sql.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/markdown/markdown.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/shell/shell.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/yaml/yaml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/ruby/ruby.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/go/go.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/rust/rust.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/swift/swift.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/search/searchcursor.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/search/search.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/search/jump-to-line.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/dialog/dialog.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/matchbrackets.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closebrackets.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/selection/active-line.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/fold/foldcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/fold/foldgutter.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/fold/brace-fold.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/fold/xml-fold.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/fold/indent-fold.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/comment/comment.min.js"></script>
+
+<!-- JSZip: project export / import as .zip -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+<style>
+:root{
+  --bg-editor:#1e1e1e;
+  --bg-titlebar:#3c3c3c;
+  --bg-activitybar:#333333;
+  --bg-sidebar:#252526;
+  --bg-tabs:#2d2d2d;
+  --bg-tab-active:#1e1e1e;
+  --bg-panel:#1e1e1e;
+  --bg-statusbar:#007acc;
+  --border:#454545;
+  --text:#d4d4d4;
+  --text-dim:#858585;
+  --accent:#007acc;
+  --accent-hover:#0e639c;
+  --danger:#f14c4c;
+  --ok:#89d185;
+  --font-ui:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --font-mono:'Consolas','Courier New',monospace;
+}
+[data-theme="light"]{
+  --bg-editor:#ffffff;
+  --bg-titlebar:#dddddd;
+  --bg-activitybar:#2c2c2c;
+  --bg-sidebar:#f3f3f3;
+  --bg-tabs:#ececec;
+  --bg-tab-active:#ffffff;
+  --bg-panel:#ffffff;
+  --border:#c8c8c8;
+  --text:#1e1e1e;
+  --text-dim:#6e6e6e;
+}
+*{box-sizing:border-box;}
+html,body{height:100%;margin:0;padding:0;overflow:hidden;}
+body{
+  background:var(--bg-editor);
+  color:var(--text);
+  font-family:var(--font-ui);
+  display:flex;
+  flex-direction:column;
+  font-size:13px;
+  -webkit-tap-highlight-color:transparent;
+}
+button{
+  font-family:var(--font-ui);
+  cursor:pointer;
+}
+::-webkit-scrollbar{width:10px;height:10px;}
+::-webkit-scrollbar-thumb{background:#4a4a4a;border-radius:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+
+/* ===== Icons (custom SVG set, no emoji anywhere) ===== */
+.icon{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;vertical-align:middle;display:inline-block;}
+.icon-lg{width:20px;height:20px;}
+.icon-sm{width:13px;height:13px;stroke-width:2;}
+.txt-icon{font-family:var(--font-mono);font-weight:700;font-size:10.5px;letter-spacing:-.5px;display:inline-flex;align-items:center;justify-content:center;min-width:16px;flex-shrink:0;}
+
+/* ===== Top-level views ===== */
+#homeView, #editorView{flex:1;min-height:0;display:flex;flex-direction:column;}
+.hidden{display:none !important;}
+
+/* ===== Home / Projects screen ===== */
+#homeView{overflow-y:auto;background:var(--bg-editor);}
+#homeHeader{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  padding:22px 18px 4px;
+}
+.home-title{font-size:21px;font-weight:700;}
+.home-title span{color:var(--accent);}
+#homeHeaderActions{display:flex;gap:8px;flex-wrap:wrap;}
+#homeSub{color:var(--text-dim);font-size:12.5px;padding:6px 18px 16px;}
+#projectGrid{display:flex;flex-direction:column;gap:10px;padding:0 18px 40px;}
+.project-card{
+  display:flex;align-items:center;gap:12px;background:var(--bg-sidebar);
+  border:1px solid var(--border);border-radius:10px;padding:12px 12px;cursor:pointer;
+  transition:border-color .15s ease;
+}
+.project-card:hover{border-color:var(--accent);}
+.pc-icon{
+  width:38px;height:38px;border-radius:9px;background:rgba(0,122,204,.16);
+  color:var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.pc-icon .icon{width:19px;height:19px;}
+.pc-body{flex:1;min-width:0;}
+.pc-name{font-size:14px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.pc-meta{font-size:11.5px;color:var(--text-dim);margin-top:2px;}
+.pc-actions{display:flex;gap:2px;flex-shrink:0;}
+#homeEmpty{color:var(--text-dim);font-size:13px;padding:50px 20px;text-align:center;line-height:1.6;}
+#homeEmpty .icon{width:34px;height:34px;display:block;margin:0 auto 12px;opacity:.5;}
+
+/* ===== Title Bar ===== */
+#titlebar{
+  height:38px;
+  background:var(--bg-titlebar);
+  display:flex;
+  align-items:center;
+  padding:0 6px;
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+  gap:4px;
+}
+.icon-btn{
+  background:transparent;
+  border:none;
+  color:var(--text);
+  width:32px;height:32px;
+  border-radius:4px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.icon-btn:hover{background:rgba(255,255,255,0.1);}
+.icon-btn:active{background:rgba(255,255,255,0.2);}
+#titlebar .title{
+  flex:1;
+  text-align:center;
+  font-weight:600;
+  letter-spacing:.5px;
+  font-size:13px;
+  color:var(--text);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+#titlebar .title span{color:var(--accent);}
+
+/* ===== Dropdown Menus ===== */
+.menu{
+  position:absolute;
+  top:38px;
+  min-width:240px;
+  background:var(--bg-sidebar);
+  border:1px solid var(--border);
+  box-shadow:0 6px 18px rgba(0,0,0,0.5);
+  border-radius:6px;
+  z-index:200;
+  display:none;
+  overflow:hidden;
+  padding:4px 0;
+  max-height:80vh;
+  overflow-y:auto;
+}
+.menu.open{display:block;}
+#mainMenu{left:6px;}
+#editMenu{right:6px;}
+.menu-item{
+  padding:9px 14px;
+  font-size:13px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  white-space:nowrap;
+  color:var(--text);
+}
+.menu-item:hover{background:var(--accent-hover);color:#fff;}
+.menu-sep{height:1px;background:var(--border);margin:4px 0;}
+.menu-item .mi-icon{width:18px;text-align:center;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.menu-item .mi-key{margin-left:auto;color:var(--text-dim);font-size:11px;}
+.menu-item:hover .mi-key{color:#dcdcdc;}
+
+/* ===== Toolbar ===== */
+#toolbar{
+  height:36px;
+  background:var(--bg-sidebar);
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  gap:2px;
+  padding:0 4px;
+  overflow-x:auto;
+  flex-shrink:0;
+}
+#toolbar select{
+  background:var(--bg-tabs);
+  color:var(--text);
+  border:1px solid var(--border);
+  border-radius:4px;
+  font-size:12px;
+  padding:4px 6px;
+  height:26px;
+}
+.tb-sep{width:1px;height:20px;background:var(--border);margin:0 4px;flex-shrink:0;}
+.tb-btn{
+  background:transparent;border:none;color:var(--text);
+  height:28px;padding:0 8px;border-radius:4px;font-size:12px;
+  display:flex;align-items:center;gap:5px;flex-shrink:0;
+}
+.tb-btn:hover{background:rgba(255,255,255,0.1);}
+.tb-btn.primary{background:var(--accent);color:#fff;}
+.tb-btn.primary:hover{background:var(--accent-hover);}
+
+/* ===== Tab bar ===== */
+#tabbar{
+  display:flex;
+  background:var(--bg-tabs);
+  overflow-x:auto;
+  flex-shrink:0;
+  border-bottom:1px solid var(--border);
+  scrollbar-width:thin;
+}
+.tab{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:0 8px 0 12px;
+  height:34px;
+  background:var(--bg-tabs);
+  border-right:1px solid var(--border);
+  color:var(--text-dim);
+  font-size:12.5px;
+  white-space:nowrap;
+  flex-shrink:0;
+  position:relative;
+  min-width:110px;
+  max-width:200px;
+}
+.tab.active{
+  background:var(--bg-tab-active);
+  color:var(--text);
+  box-shadow:inset 0 -2px 0 var(--accent);
+}
+.tab .tname{overflow:hidden;text-overflow:ellipsis;flex:1;}
+.tab .tclose{
+  width:18px;height:18px;border-radius:4px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  background:transparent;border:none;color:var(--text-dim);
+}
+.tab .tclose:hover{background:rgba(255,255,255,0.15);color:var(--text);}
+.tab .tdot{width:8px;height:8px;border-radius:50%;background:#fff;flex-shrink:0;display:none;}
+.tab.unsaved .tdot{display:block;}
+.tab.unsaved:hover .tclose{display:flex;}
+#newTabBtn2{flex-shrink:0;}
+
+/* ===== Main area ===== */
+#main{flex:1;display:flex;min-height:0;position:relative;}
+#editorWrapper{flex:1;min-width:0;position:relative;}
+.CodeMirror{height:100%;font-family:var(--font-mono);font-size:14px;line-height:1.5;background:var(--bg-editor);color:var(--text);}
+.CodeMirror-gutters{background:var(--bg-editor);border-right:1px solid var(--border);}
+.CodeMirror-linenumber{color:#5a5a5a;}
+.CodeMirror-cursor{border-left:2px solid #aeafad;}
+.CodeMirror-selected{background:#264f78;}
+.CodeMirror-activeline-background{background:rgba(255,255,255,0.04);}
+.cm-keyword{color:#569cd6;}
+.cm-atom{color:#569cd6;}
+.cm-number{color:#b5cea8;}
+.cm-def{color:#dcdcaa;}
+.cm-variable{color:#9cdcfe;}
+.cm-variable-2{color:#9cdcfe;}
+.cm-variable-3, .cm-type{color:#4ec9b0;}
+.cm-property{color:#9cdcfe;}
+.cm-operator{color:#d4d4d4;}
+.cm-comment{color:#6a9955;font-style:italic;}
+.cm-string{color:#ce9178;}
+.cm-string-2{color:#ce9178;}
+.cm-meta{color:#d4d4d4;}
+.cm-qualifier{color:#d7ba7d;}
+.cm-builtin{color:#4ec9b0;}
+.cm-bracket{color:#ffd700;}
+.cm-tag{color:#569cd6;}
+.cm-attribute{color:#9cdcfe;}
+.cm-header{color:#569cd6;}
+.cm-link{color:#569cd6;}
+.cm-error{color:#f14c4c;}
+.cm-matchhighlight{background:#3a3d41;}
+[data-theme="light"] .CodeMirror{color:#000;}
+
+/* ===== Side panels ===== */
+.panel{
+  position:absolute;
+  inset:0;
+  background:var(--bg-panel);
+  display:none;
+  flex-direction:column;
+  z-index:20;
+}
+.panel.open{display:flex;}
+.panel-head{
+  height:34px;flex-shrink:0;
+  background:var(--bg-sidebar);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 10px;gap:8px;
+  font-size:12.5px;font-weight:600;
+}
+.panel-head .spacer{flex:1;}
+.panel-body{flex:1;min-height:0;overflow:auto;}
+#previewFrame{width:100%;height:100%;border:none;background:#fff;}
+#pyOutput,#termOutput{
+  flex:1;background:#0c0c0c;color:#d4d4d4;font-family:var(--font-mono);
+  font-size:13px;padding:8px;overflow:auto;white-space:pre-wrap;word-break:break-word;
+}
+#termInput{
+  flex:1;background:#0c0c0c;color:#fff;border:none;padding:8px;
+  font-family:var(--font-mono);font-size:13px;outline:none;
+}
+#errList{list-style:none;margin:0;padding:0;}
+#errList li{
+  padding:8px 12px;border-bottom:1px solid var(--border);
+  font-size:12.5px;display:flex;gap:8px;cursor:pointer;align-items:flex-start;
+}
+#errList li:hover{background:rgba(255,255,255,0.06);}
+#errList .eline{color:var(--accent);font-weight:600;flex-shrink:0;}
+#errList .emsg{color:var(--danger);}
+#errEmpty{padding:16px;color:var(--ok);font-size:13px;display:none;align-items:center;gap:8px;}
+
+/* File select sidebar list */
+#fileSelectList{list-style:none;margin:0;padding:0;}
+.fsl-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--border);font-size:13px;cursor:pointer;color:var(--text);}
+.fsl-item.active{background:rgba(0,122,204,0.14);}
+.fsl-item:hover{background:rgba(255,255,255,0.05);}
+.fsl-item .icon{color:var(--text-dim);}
+.fsl-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.fsl-lang{font-size:10.5px;color:var(--text-dim);flex-shrink:0;}
+.fsl-del{flex-shrink:0;}
+
+/* About panel */
+#aboutBody{padding:16px;line-height:1.7;font-size:13px;}
+#aboutBody h4{margin:16px 0 6px;color:var(--accent);font-size:12.5px;text-transform:uppercase;letter-spacing:.4px;}
+#aboutBody h4:first-child{margin-top:0;}
+#aboutBody ul{margin:0 0 4px;padding-left:18px;}
+#aboutBody li{margin:3px 0;}
+#aboutBody table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:4px;}
+#aboutBody table td{border-bottom:1px solid var(--border);padding:6px 4px;}
+#aboutBody table td:first-child{color:var(--accent);font-family:var(--font-mono);white-space:nowrap;padding-right:14px;}
+
+/* ===== Bottom terminal dock ===== */
+#termDock{
+  position:absolute;left:0;right:0;bottom:0;height:0;
+  background:#0c0c0c;border-top:1px solid var(--border);
+  display:flex;flex-direction:column;overflow:hidden;
+  transition:height .15s ease;z-index:15;
+}
+#termDock.open{height:230px;}
+
+/* ===== Status bar ===== */
+#statusbar{
+  height:22px;background:var(--bg-statusbar);color:#fff;
+  display:flex;align-items:center;font-size:11.5px;
+  padding:0 10px;gap:14px;flex-shrink:0;
+}
+#statusbar span{white-space:nowrap;display:flex;align-items:center;gap:4px;}
+#statusbar .sb-right{margin-left:auto;display:flex;gap:14px;}
+#statusbar .sb-item{cursor:pointer;}
+#statusbar .sb-item:hover{background:rgba(255,255,255,0.15);padding:0 4px;border-radius:2px;}
+
+/* ===== Modal ===== */
+#modalOverlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.5);
+  display:none;align-items:center;justify-content:center;z-index:500;
+}
+#modalOverlay.open{display:flex;}
+#modalBox{
+  background:var(--bg-sidebar);border:1px solid var(--border);
+  border-radius:8px;padding:16px;width:300px;max-width:90vw;
+  box-shadow:0 10px 30px rgba(0,0,0,0.5);
+}
+#modalBox h3{margin:0 0 10px;font-size:14px;}
+#modalBox input{
+  width:100%;padding:8px;border-radius:4px;border:1px solid var(--border);
+  background:var(--bg-editor);color:var(--text);font-family:var(--font-mono);margin-bottom:10px;
+}
+#modalBox .modal-actions{display:flex;justify-content:flex-end;gap:8px;}
+#modalBox button{
+  padding:6px 14px;border-radius:4px;border:none;font-size:12.5px;
+  background:var(--bg-tabs);color:var(--text);
+}
+#modalBox button.primary{background:var(--accent);color:#fff;}
+
+/* ===== Confirm modal ===== */
+#confirmOverlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.5);
+  display:none;align-items:center;justify-content:center;z-index:520;
+}
+#confirmOverlay.open{display:flex;}
+#confirmBox{
+  background:var(--bg-sidebar);border:1px solid var(--border);
+  border-radius:8px;padding:16px;width:300px;max-width:90vw;
+  box-shadow:0 10px 30px rgba(0,0,0,0.5);
+}
+#confirmBox h3{margin:0 0 8px;font-size:14px;}
+#confirmBox p{margin:0 0 14px;font-size:12.5px;line-height:1.5;color:var(--text);}
+#confirmBox .modal-actions{display:flex;justify-content:flex-end;gap:8px;}
+#confirmBox button{
+  padding:6px 14px;border-radius:4px;border:none;font-size:12.5px;
+  background:var(--bg-tabs);color:var(--text);
+}
+#confirmBox button.primary{background:var(--accent);color:#fff;}
+#confirmBox button.danger{background:var(--danger);color:#fff;}
+
+/* ===== Custom Language Picker (replaces native <select>) ===== */
+#langPickerBtn{
+  background:var(--bg-tabs);color:var(--text);border:1px solid var(--border);
+  border-radius:4px;font-size:12px;padding:0 8px;height:26px;
+  display:flex;align-items:center;gap:6px;flex-shrink:0;min-width:96px;
+}
+#langPickerBtn .lp-caret{width:9px;height:9px;flex-shrink:0;}
+#langPickerOverlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.5);
+  display:none;align-items:flex-end;justify-content:center;z-index:510;
+}
+#langPickerOverlay.open{display:flex;}
+#langPickerSheet{
+  background:var(--bg-sidebar);border:1px solid var(--border);
+  border-radius:12px 12px 0 0;width:100%;max-width:480px;max-height:70vh;
+  display:flex;flex-direction:column;box-shadow:0 -6px 24px rgba(0,0,0,.5);
+}
+#langPickerSheet .lp-head{
+  padding:12px 14px;font-size:13.5px;font-weight:600;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;
+}
+#langPickerSheet .lp-head .spacer{flex:1;}
+#langPickerList{list-style:none;margin:0;padding:6px 0;overflow-y:auto;}
+.lp-item{padding:11px 16px;font-size:13.5px;display:flex;align-items:center;justify-content:space-between;color:var(--text);}
+.lp-item:hover{background:rgba(255,255,255,0.06);}
+.lp-item.selected{color:var(--accent);font-weight:600;}
+.lp-item.selected .lp-check{display:inline-flex;}
+.lp-check{display:none;width:16px;height:16px;}
+
+/* toast */
+#toast{
+  position:fixed;bottom:34px;left:50%;transform:translateX(-50%);
+  background:#323233;color:#fff;padding:8px 16px;border-radius:6px;
+  font-size:12.5px;box-shadow:0 4px 14px rgba(0,0,0,.4);
+  z-index:600;opacity:0;pointer-events:none;transition:opacity .25s ease, bottom .25s ease;
+  display:flex;align-items:center;gap:8px;
+}
+#toast.show{opacity:1;bottom:44px;}
+</style>
+</head>
+<body>
+
+<!-- ================= HOME / PROJECTS ================= -->
+<div id="homeView">
+  <div id="homeHeader">
+    <div class="home-title">Mobile<span>Codes</span></div>
+    <div id="homeHeaderActions">
+      <button class="tb-btn" id="btnImportProject"><span data-icon="archive"></span> Import ZIP</button>
+      <button class="tb-btn primary" id="btnNewProject"><span data-icon="plus"></span> New Project</button>
+    </div>
+  </div>
+  <div id="homeSub">Version 1.0.0 - By Aditzmods!</div>
+  <div id="projectGrid"></div>
+  <div id="homeEmpty" class="hidden">
+    <span data-icon="folder"></span>
+    No projects yet.<br>Tap "New Project" to create your first one.
+  </div>
+</div>
+<input type="file" id="projectZipInput" accept=".zip" class="hidden">
+
+<!-- ================= EDITOR ================= -->
+<div id="editorView" class="hidden">
+
+  <!-- Title bar -->
+  <div id="titlebar">
+    <button class="icon-btn" id="btnGoHome" title="Home / Projects"><span data-icon="home"></span></button>
+    <button class="icon-btn" id="mainMenuBtn" title="Menu"><span data-icon="menu"></span></button>
+    <div class="title" id="editorTitle">Mobile<span>Codes</span></div>
+    <button class="icon-btn" id="editMenuBtn" title="Edit Tools"><span data-icon="menu"></span></button>
+  </div>
+
+  <!-- Main hamburger menu -->
+  <div class="menu" id="mainMenu">
+    <div class="menu-item" data-action="goHome"><span class="mi-icon" data-icon="home"></span> Home / Projects</div>
+    <div class="menu-sep"></div>
+    <div class="menu-item" data-action="viewHtml"><span class="mi-icon" data-icon="monitor"></span> View HTML Preview</div>
+    <div class="menu-item" data-action="detectError"><span class="mi-icon" data-icon="bug"></span> Detect Error</div>
+    <div class="menu-item" data-action="autoDeleteError"><span class="mi-icon" data-icon="broom"></span> Auto Delete Error</div>
+    <div class="menu-item" data-action="pythonRunner"><span class="mi-icon" data-txticon="PY"></span> Python Runner</div>
+    <div class="menu-item" data-action="terminal"><span class="mi-icon" data-icon="terminal"></span> Terminal</div>
+    <div class="menu-item" data-action="filesPanel"><span class="mi-icon" data-icon="folder"></span> Select File</div>
+    <div class="menu-sep"></div>
+    <div class="menu-item" data-action="about"><span class="mi-icon" data-icon="info"></span> Features &amp; Shortcuts</div>
+  </div>
+
+  <!-- Edit / tools hamburger menu -->
+  <div class="menu" id="editMenu">
+    <div class="menu-item" data-action="find"><span class="mi-icon" data-icon="search"></span> Find <span class="mi-key">Ctrl+F</span></div>
+    <div class="menu-item" data-action="replace"><span class="mi-icon" data-icon="replace"></span> Replace <span class="mi-key">Ctrl+H</span></div>
+    <div class="menu-item" data-action="gotoLine"><span class="mi-icon" data-icon="goto"></span> Go to Line <span class="mi-key">Ctrl+G</span></div>
+    <div class="menu-sep"></div>
+    <div class="menu-item" data-action="selectAll"><span class="mi-icon" data-icon="selectAll"></span> Select All <span class="mi-key">Ctrl+A</span></div>
+    <div class="menu-item" data-action="duplicateLine"><span class="mi-icon" data-icon="duplicate"></span> Duplicate Line <span class="mi-key">Ctrl+D</span></div>
+    <div class="menu-item" data-action="deleteLine"><span class="mi-icon" data-icon="trash"></span> Delete Line <span class="mi-key">Ctrl+Shift+K</span></div>
+    <div class="menu-item" data-action="moveLineUp"><span class="mi-icon" data-icon="arrowUp"></span> Move Line Up <span class="mi-key">Alt+&#8593;</span></div>
+    <div class="menu-item" data-action="moveLineDown"><span class="mi-icon" data-icon="arrowDown"></span> Move Line Down <span class="mi-key">Alt+&#8595;</span></div>
+    <div class="menu-sep"></div>
+    <div class="menu-item" data-action="toggleComment"><span class="mi-icon" data-icon="comment"></span> Toggle Comment <span class="mi-key">Ctrl+/</span></div>
+    <div class="menu-item" data-action="indentMore"><span class="mi-icon" data-icon="indent"></span> Indent</div>
+    <div class="menu-item" data-action="indentLess"><span class="mi-icon" data-icon="outdent"></span> Outdent</div>
+    <div class="menu-item" data-action="upper"><span class="mi-icon" data-txticon="AB"></span> UPPERCASE</div>
+    <div class="menu-item" data-action="lower"><span class="mi-icon" data-txticon="ab"></span> lowercase</div>
+    <div class="menu-item" data-action="trim"><span class="mi-icon" data-icon="scissors"></span> Trim Trailing Space</div>
+    <div class="menu-item" data-action="sortLines"><span class="mi-icon" data-icon="sort"></span> Sort Lines</div>
+    <div class="menu-item" data-action="format"><span class="mi-icon" data-icon="format"></span> Format / Beautify</div>
+    <div class="menu-sep"></div>
+    <div class="menu-item" data-action="wordWrap"><span class="mi-icon" data-icon="wrap"></span> Toggle Word Wrap</div>
+    <div class="menu-item" data-action="autoClose"><span class="mi-icon" data-txticon="()"></span> Toggle Auto-Close Brackets</div>
+    <div class="menu-item" data-action="copyAll"><span class="mi-icon" data-icon="copy"></span> Copy All to Clipboard</div>
+    <div class="menu-item" data-action="fullscreen"><span class="mi-icon" data-icon="fullscreen"></span> Toggle Fullscreen</div>
+  </div>
+
+  <!-- Toolbar -->
+  <div id="toolbar">
+    <button class="tb-btn" id="btnNew" title="New File"><span data-icon="filePlus"></span> New</button>
+    <button class="tb-btn" id="btnOpen" title="Open File From Device"><span data-icon="upload"></span> Open</button>
+    <input type="file" id="fileInput" multiple class="hidden">
+    <button class="tb-btn" id="btnFiles" title="Select File"><span data-icon="folder"></span> Files</button>
+    <button class="tb-btn" id="btnSave" title="Save / Download (Ctrl+S)"><span data-icon="save"></span> Save</button>
+    <button class="tb-btn" id="btnSaveAll" title="Save All"><span data-icon="saveAll"></span> Save All</button>
+    <div class="tb-sep"></div>
+    <button class="tb-btn" id="langPickerBtn" title="Language">
+      <span id="langPickerLabel">JavaScript</span>
+      <svg class="lp-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+    <div class="tb-sep"></div>
+    <button class="tb-btn" id="btnFontMinus" title="Decrease font"><span data-txticon="A-"></span></button>
+    <button class="tb-btn" id="btnFontPlus" title="Increase font"><span data-txticon="A+"></span></button>
+    <button class="tb-btn" id="btnTheme" title="Toggle light/dark theme"><span data-icon="sun"></span></button>
+    <div class="tb-sep"></div>
+    <button class="tb-btn" id="btnQuickTerminal" title="Toggle Terminal Dock"><span data-icon="terminal"></span> Terminal</button>
+  </div>
+
+  <!-- Tab bar -->
+  <div id="tabbar"></div>
+
+  <!-- Main editor area -->
+  <div id="main">
+    <div id="editorWrapper"><textarea id="cmHost"></textarea></div>
+
+    <!-- View HTML preview panel -->
+    <div class="panel" id="panelPreview">
+      <div class="panel-head">
+        <span data-icon="monitor"></span><span>&nbsp;HTML Preview</span>
+        <div class="spacer"></div>
+        <button class="tb-btn" id="previewRefresh"><span data-icon="refresh"></span> Refresh</button>
+        <button class="tb-btn" id="previewClose"><span data-icon="close"></span></button>
+      </div>
+      <div class="panel-body"><iframe id="previewFrame" sandbox="allow-scripts allow-modals allow-forms"></iframe></div>
+    </div>
+
+    <!-- Error detection panel -->
+    <div class="panel" id="panelErrors">
+      <div class="panel-head">
+        <span data-icon="bug"></span><span>&nbsp;Detect Error</span>
+        <div class="spacer"></div>
+        <button class="tb-btn" id="btnRunDetect"><span data-icon="search"></span> Scan</button>
+        <button class="tb-btn" id="btnRunAutoDelete"><span data-icon="broom"></span> Auto Delete</button>
+        <button class="tb-btn" id="errorsClose"><span data-icon="close"></span></button>
+      </div>
+      <div class="panel-body"><ul id="errList"></ul><div id="errEmpty"><span data-icon="check"></span> No errors detected.</div></div>
+    </div>
+
+    <!-- Python runner panel -->
+    <div class="panel" id="panelPython">
+      <div class="panel-head">
+        <span data-txticon="PY"></span><span>&nbsp;Python Runner (Pyodide)</span>
+        <div class="spacer"></div>
+        <button class="tb-btn" id="btnPyRun"><span data-icon="play"></span> Run</button>
+        <button class="tb-btn" id="btnPyClear"><span data-icon="trash"></span> Clear</button>
+        <button class="tb-btn" id="pyClose"><span data-icon="close"></span></button>
+      </div>
+      <div class="panel-body" style="display:flex;flex-direction:column;">
+        <div id="pyOutput">Python runner ready. Tap "Run" to execute the current tab as Python.
+First run downloads the Pyodide runtime (~6MB) from cdn.jsdelivr.net, requires internet access.</div>
+      </div>
+    </div>
+
+    <!-- Terminal full panel -->
+    <div class="panel" id="panelTerminal">
+      <div class="panel-head">
+        <span data-icon="terminal"></span><span>&nbsp;Terminal — fast with text</span>
+        <div class="spacer"></div>
+        <button class="tb-btn" id="btnTermClear"><span data-icon="trash"></span> Clear</button>
+        <button class="tb-btn" id="termClose"><span data-icon="close"></span></button>
+      </div>
+      <div class="panel-body" style="display:flex;flex-direction:column;">
+        <div id="termOutput"></div>
+        <div style="display:flex;border-top:1px solid var(--border);">
+          <span style="padding:8px 0 8px 8px;color:#89d185;font-family:monospace;">guest@mobilecodes:~$</span>
+          <input id="termInput" placeholder="type 'help'" autocomplete="off">
+        </div>
+      </div>
+    </div>
+
+    <!-- Files select panel -->
+    <div class="panel" id="panelFiles">
+      <div class="panel-head">
+        <span data-icon="folder"></span><span>&nbsp;Select File</span>
+        <div class="spacer"></div>
+        <button class="tb-btn" id="btnFilesAdd"><span data-icon="filePlus"></span> Add</button>
+        <button class="tb-btn" id="filesClose"><span data-icon="close"></span></button>
+      </div>
+      <div class="panel-body"><ul id="fileSelectList"></ul></div>
+    </div>
+
+    <!-- About / features panel -->
+    <div class="panel" id="panelAbout">
+      <div class="panel-head">
+        <span data-icon="info"></span><span>&nbsp;Features &amp; Shortcuts</span>
+        <div class="spacer"></div>
+        <button class="tb-btn" id="aboutClose"><span data-icon="close"></span></button>
+      </div>
+      <div class="panel-body">
+        <div id="aboutBody">
+          <h4>Projects</h4>
+          <ul>
+            <li>Multiple projects, each holding its own set of files</li>
+            <li>Home screen lists every project — name, file count, last-edited time</li>
+            <li>Create, rename and delete projects</li>
+            <li>Export any project as a downloadable .zip archive</li>
+            <li>Import a .zip archive as a new project</li>
+            <li>Everything autosaves to on-device local storage — fully offline, no account</li>
+          </ul>
+          <h4>Files &amp; Tabs</h4>
+          <ul>
+            <li>Multi-file tabbed editing inside a project</li>
+            <li>Dedicated "Select File" sidebar to jump between or remove files</li>
+            <li>New file, open a file from the device, rename (double-tap a tab), delete</li>
+            <li>Unsaved-changes dot indicator per tab</li>
+            <li>Confirmation before closing a file with unsaved changes</li>
+            <li>Save a single file or Save All files to the device</li>
+          </ul>
+          <h4>Languages</h4>
+          <ul><li>Syntax highlighting for 21 languages: JavaScript, TypeScript, JSX, JSON, HTML, CSS, Python, XML, C, C++, Java, C#, PHP, SQL, Markdown, Shell, YAML, Ruby, Go, Rust, Swift, Plain Text</li></ul>
+          <h4>Editing Tools</h4>
+          <ul>
+            <li>Find &amp; Replace</li>
+            <li>Go to Line</li>
+            <li>Select All</li>
+            <li>Duplicate Line</li>
+            <li>Delete Line</li>
+            <li>Move Line Up / Down</li>
+            <li>Toggle Line Comment</li>
+            <li>Indent / Outdent</li>
+            <li>UPPERCASE / lowercase selection</li>
+            <li>Trim trailing whitespace</li>
+            <li>Sort lines A–Z</li>
+            <li>Format / beautify (JSON pretty-print + basic brace re-indent)</li>
+            <li>Toggle word wrap</li>
+            <li>Toggle auto-close brackets</li>
+            <li>Copy entire file to clipboard</li>
+            <li>Bracket matching &amp; code folding</li>
+            <li>Active-line highlighting &amp; line numbers</li>
+            <li>Undo / redo</li>
+          </ul>
+          <h4>Run &amp; Debug</h4>
+          <ul>
+            <li>Live HTML preview in a sandboxed frame</li>
+            <li>Error detection for JS, JSON, Python and bracket mismatches</li>
+            <li>Auto-delete offending lines</li>
+            <li>In-browser Python runner (Pyodide)</li>
+            <li>Simulated terminal panel plus a quick bottom terminal dock</li>
+          </ul>
+          <h4>Interface</h4>
+          <ul>
+            <li>Dark / light theme</li>
+            <li>Adjustable editor font size</li>
+            <li>Fullscreen mode</li>
+            <li>Custom vector icon set throughout — no emoji</li>
+            <li>Status bar: language, char/line count, cursor position, autosave state</li>
+            <li>Toast notifications for quick feedback</li>
+            <li>Custom in-app popups for language picking and confirmations (no native browser dialogs)</li>
+          </ul>
+          <h4>Keyboard Shortcuts</h4>
+          <table>
+            <tr><td>Ctrl+S</td><td>Save current file</td></tr>
+            <tr><td>Ctrl+F</td><td>Find</td></tr>
+            <tr><td>Ctrl+H</td><td>Replace</td></tr>
+            <tr><td>Ctrl+G</td><td>Go to line</td></tr>
+            <tr><td>Ctrl+D</td><td>Duplicate line</td></tr>
+            <tr><td>Ctrl+/</td><td>Toggle comment</td></tr>
+            <tr><td>Ctrl+Shift+K</td><td>Delete line</td></tr>
+            <tr><td>Alt+&#8593; / Alt+&#8595;</td><td>Move line up / down</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick bottom terminal dock -->
+    <div id="termDock">
+      <div class="panel-head" style="background:#161616;">
+        <span data-icon="terminal"></span><span>&nbsp;Terminal</span>
+        <div class="spacer"></div>
+        <button class="tb-btn" id="dockClear"><span data-icon="trash"></span></button>
+        <button class="tb-btn" id="dockClose"><span data-icon="close"></span></button>
+      </div>
+      <div id="dockOutput" style="flex:1;overflow:auto;background:#0c0c0c;color:#d4d4d4;font-family:monospace;font-size:12.5px;padding:6px;white-space:pre-wrap;"></div>
+      <div style="display:flex;border-top:1px solid #333;">
+        <span style="padding:6px 0 6px 8px;color:#89d185;font-family:monospace;font-size:12.5px;">$</span>
+        <input id="dockInput" style="flex:1;background:#0c0c0c;color:#fff;border:none;padding:6px 8px;font-family:monospace;font-size:12.5px;outline:none;" autocomplete="off">
+      </div>
+    </div>
+  </div>
+
+  <!-- Status bar -->
+  <div id="statusbar">
+    <span id="sbLang">JavaScript</span>
+    <span id="sbLen">0 chars</span>
+    <span id="sbLines">1 lines</span>
+    <div class="sb-right">
+      <span class="sb-item" id="sbSave" title="Autosave status"><span data-icon="save" class="icon-sm"></span> Autosaved</span>
+      <span class="sb-item" id="sbPos">Ln 1, Col 1</span>
+      <span>UTF-8</span>
+    </div>
+  </div>
+</div>
+
+<!-- ================= MODAL (input) ================= -->
+<div id="modalOverlay">
+  <div id="modalBox">
+    <h3 id="modalTitle">Input</h3>
+    <input id="modalInput" type="text">
+    <div class="modal-actions">
+      <button id="modalCancel">Cancel</button>
+      <button id="modalOk" class="primary">OK</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= CONFIRM MODAL (replaces window.confirm) ================= -->
+<div id="confirmOverlay">
+  <div id="confirmBox">
+    <h3 id="confirmTitle">Confirm</h3>
+    <p id="confirmMsg">Are you sure?</p>
+    <div class="modal-actions">
+      <button id="confirmCancel">Cancel</button>
+      <button id="confirmOk" class="primary">OK</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= LANGUAGE PICKER (custom popup, replaces native <select>) ================= -->
+<div id="langPickerOverlay">
+  <div id="langPickerSheet">
+    <div class="lp-head"><span>Select Language</span><div class="spacer"></div><button class="icon-btn" id="langPickerClose"><span data-icon="close"></span></button></div>
+    <ul id="langPickerList"></ul>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* =====================================================================
+   MOBILECODES  —  a lightweight VS-Code style multi-language mobile IDE
+   Projects (home screen) + multi-file tabs + 40 productivity features.
+   All data stored locally on-device via localStorage. No servers, no
+   accounts. Custom SVG icon set throughout (no emoji).
+
+   All native browser popups (window.prompt / confirm) are replaced
+   with in-app custom modals/sheets so behaviour is consistent when the
+   page is loaded inside an Android WebView component (e.g. Sketchware,
+   Sketchware Pro, Kodular WebView, Android Studio WebView).
+===================================================================== */
+
+/* ---------- WebView compatibility helpers ---------- */
+// Detect whether we're likely running inside a bare Android WebView
+// (Sketchware / Kodular apps use WebView, which by default has no
+// download manager, no <input type=file> chooser unless the host app
+// enables it, and no window.confirm/alert dialogs unless the host sets
+// a WebChromeClient). We avoid relying on any of those and use our own
+// UI for everything so the app behaves identically in a normal browser
+// and inside a WebView.
+const IS_LIKELY_WEBVIEW = /wv\)|; wv/i.test(navigator.userAgent) || (typeof window.Android !== 'undefined');
+
+/* ---------- Custom icon set ---------- */
+const ICONS = {
+  menu: '<line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>',
+  home: '<path d="M4 11L12 4l8 7"/><path d="M6 10v9h12v-9"/><path d="M10 19v-5h4v5"/>',
+  folder: '<path d="M3 6a1 1 0 0 1 1-1h5l2 2h9a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6z"/>',
+  file: '<path d="M6 2h8l5 5v15H6z"/><path d="M14 2v5h5"/>',
+  filePlus: '<path d="M6 2h8l5 5v15H6z"/><path d="M14 2v5h5"/><line x1="9.5" y1="14" x2="14.5" y2="14"/><line x1="12" y1="11.5" x2="12" y2="16.5"/>',
+  save: '<path d="M5 3h11l4 4v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M8 3v6h8V3"/><path d="M7 21v-7h10v7"/>',
+  saveAll: '<path d="M5 3h11l4 4v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M8 3v6h8V3"/><path d="M7 21v-7h10v7"/><line x1="2" y1="8" x2="2" y2="20"/>',
+  upload: '<path d="M12 16V4"/><polyline points="7 9 12 4 17 9"/><path d="M4 20h16"/>',
+  download: '<path d="M12 4v12"/><polyline points="7 11 12 16 17 11"/><path d="M4 20h16"/>',
+  search: '<circle cx="10" cy="10" r="6"/><line x1="15" y1="15" x2="21" y2="21"/>',
+  replace: '<polyline points="17 2 21 6 17 10"/><path d="M3 6h18"/><polyline points="7 22 3 18 7 14"/><path d="M21 18H3"/>',
+  goto: '<circle cx="12" cy="12" r="9"/><line x1="12" y1="7" x2="12" y2="17"/><line x1="7" y1="12" x2="17" y2="12"/>',
+  selectAll: '<rect x="3" y="3" width="18" height="18" rx="2" stroke-dasharray="4 3"/><circle cx="12" cy="12" r="2" fill="currentColor" stroke="none"/>',
+  duplicate: '<rect x="8" y="8" width="12" height="12" rx="1"/><path d="M4 16V5a1 1 0 0 1 1-1h11"/>',
+  trash: '<polyline points="3 6 5 6 21 6"/><path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/><path d="M19 6l-1 14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1L5 6"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/>',
+  arrowUp: '<line x1="12" y1="19" x2="12" y2="5"/><polyline points="6 11 12 5 18 11"/>',
+  arrowDown: '<line x1="12" y1="5" x2="12" y2="19"/><polyline points="6 13 12 19 18 13"/>',
+  comment: '<path d="M21 15a2 2 0 0 1-2 2H8l-5 4V6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="7" y1="9" x2="17" y2="9" stroke-dasharray="3 2"/>',
+  indent: '<line x1="4" y1="6" x2="20" y2="6"/><line x1="10" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/><polyline points="4 9 7 12 4 15"/>',
+  outdent: '<line x1="4" y1="6" x2="20" y2="6"/><line x1="10" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/><polyline points="7 9 4 12 7 15"/>',
+  scissors: '<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="8.5" y1="8" x2="20" y2="18"/><line x1="8.5" y1="16" x2="20" y2="6"/>',
+  sort: '<line x1="4" y1="19" x2="4" y2="9"/><polyline points="1 12 4 9 7 12"/><line x1="10" y1="6" x2="20" y2="6"/><line x1="10" y1="12" x2="17" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/>',
+  format: '<path d="M6 18L16.5 7.5a1.5 1.5 0 0 0 0-2l-.5-.5a1.5 1.5 0 0 0-2 0L3.5 15.5 3 19z"/><path d="M13.5 6.5l4 4"/><path d="M18 3l1 2 2 1-2 1-1 2-1-2-2-1 2-1z"/>',
+  wrap: '<line x1="4" y1="6" x2="20" y2="6"/><path d="M4 12h13a3 3 0 0 1 0 6h-4"/><polyline points="15 15 13 18 15 21"/><line x1="4" y1="18" x2="9" y2="18"/>',
+  copy: '<rect x="9" y="9" width="12" height="12" rx="1"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/>',
+  fullscreen: '<polyline points="4 9 4 4 9 4"/><polyline points="15 4 20 4 20 9"/><polyline points="20 15 20 20 15 20"/><polyline points="9 20 4 20 4 15"/>',
+  sun: '<circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="4" y1="12" x2="2" y2="12"/><line x1="22" y1="12" x2="20" y2="12"/><line x1="5" y1="5" x2="6.5" y2="6.5"/><line x1="17.5" y1="17.5" x2="19" y2="19"/><line x1="19" y1="5" x2="17.5" y2="6.5"/><line x1="6.5" y1="17.5" x2="5" y2="19"/>',
+  monitor: '<rect x="3" y="4" width="18" height="12" rx="1"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/>',
+  bug: '<rect x="8" y="8" width="8" height="10" rx="4"/><line x1="12" y1="4" x2="12" y2="8"/><line x1="9" y1="5.5" x2="10.5" y2="7.5"/><line x1="15" y1="5.5" x2="13.5" y2="7.5"/><line x1="4" y1="11" x2="8" y2="11"/><line x1="16" y1="11" x2="20" y2="11"/><line x1="4" y1="16" x2="8" y2="15"/><line x1="16" y1="15" x2="20" y2="16"/><line x1="6" y1="20" x2="9" y2="17.5"/><line x1="18" y1="20" x2="15" y2="17.5"/>',
+  broom: '<line x1="19" y1="5" x2="10" y2="14"/><path d="M9 11l4 4-2 3-6-6z"/><line x1="4" y1="20" x2="8" y2="16"/>',
+  terminal: '<rect x="3" y="4" width="18" height="16" rx="2"/><polyline points="7 9 11 12 7 15"/><line x1="12" y1="15" x2="17" y2="15"/>',
+  play: '<polygon points="6 4 20 12 6 20"/>',
+  close: '<line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/>',
+  check: '<polyline points="4 12 9 17 20 6"/>',
+  refresh: '<path d="M20 11A8 8 0 1 0 19 15"/><polyline points="20 4 20 11 13 11"/>',
+  info: '<circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16"/><circle cx="12" cy="7.5" r="0.6" fill="currentColor" stroke="none"/>',
+  edit: '<path d="M4 20l1-4.5L15.5 5l3.5 3.5L8.5 19 4 20z"/><line x1="13.5" y1="6.5" x2="17.5" y2="10.5"/>',
+  archive: '<rect x="3" y="4" width="18" height="4" rx="1"/><path d="M5 8v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8"/><line x1="10" y1="12" x2="14" y2="12"/>',
+  plus: '<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>'
+};
+function icon(name, cls){ return '<svg class="icon '+(cls||'')+'" viewBox="0 0 24 24">'+(ICONS[name]||'')+'</svg>'; }
+function paintIcons(root){
+  (root||document).querySelectorAll('[data-icon]').forEach(el=>{
+    const name = el.getAttribute('data-icon');
+    if(ICONS[name]) el.innerHTML = '<svg class="icon" viewBox="0 0 24 24">'+ICONS[name]+'</svg>';
+  });
+  (root||document).querySelectorAll('[data-txticon]').forEach(el=>{
+    el.innerHTML = '<span class="txt-icon">'+el.getAttribute('data-txticon')+'</span>';
+  });
+}
+
+/* ---------- Language registry ---------- */
+const LANGS = {
+  javascript:{label:"JavaScript", mode:{name:"javascript"}, ext:"js"},
+  jsx:       {label:"JSX (React)", mode:{name:"javascript", jsx:true}, ext:"jsx"},
+  typescript:{label:"TypeScript", mode:{name:"javascript", typescript:true}, ext:"ts"},
+  json:      {label:"JSON", mode:{name:"javascript", json:true}, ext:"json"},
+  html:      {label:"HTML", mode:"htmlmixed", ext:"html"},
+  css:       {label:"CSS", mode:"css", ext:"css"},
+  python:    {label:"Python", mode:{name:"python"}, ext:"py"},
+  xml:       {label:"XML", mode:"xml", ext:"xml"},
+  cpp:       {label:"C++", mode:"text/x-c++src", ext:"cpp"},
+  c:         {label:"C", mode:"text/x-csrc", ext:"c"},
+  java:      {label:"Java", mode:"text/x-java", ext:"java"},
+  csharp:    {label:"C#", mode:"text/x-csharp", ext:"cs"},
+  php:       {label:"PHP", mode:{name:"php"}, ext:"php"},
+  sql:       {label:"SQL", mode:"text/x-sql", ext:"sql"},
+  markdown:  {label:"Markdown", mode:"markdown", ext:"md"},
+  shell:     {label:"Shell / Bash", mode:"shell", ext:"sh"},
+  yaml:      {label:"YAML", mode:"yaml", ext:"yaml"},
+  ruby:      {label:"Ruby", mode:"ruby", ext:"rb"},
+  go:        {label:"Go", mode:"go", ext:"go"},
+  rust:      {label:"Rust", mode:"rust", ext:"rs"},
+  swift:     {label:"Swift", mode:"swift", ext:"swift"},
+  plaintext: {label:"Plain Text", mode:null, ext:"txt"}
+};
+const EXT_TO_LANG = {};
+Object.keys(LANGS).forEach(k=>{ EXT_TO_LANG[LANGS[k].ext]=k; });
+EXT_TO_LANG["htm"]="html"; EXT_TO_LANG["mjs"]="javascript"; EXT_TO_LANG["yml"]="yaml"; EXT_TO_LANG["h"]="c";
+
+/* ---------- Custom language picker (bottom sheet, no native <select>) ---------- */
+function buildLangPickerList(){
+  const ul = document.getElementById('langPickerList');
+  ul.innerHTML = "";
+  Object.keys(LANGS).forEach(k=>{
+    const li = document.createElement('li');
+    li.className = 'lp-item';
+    li.dataset.key = k;
+    li.innerHTML = '<span>'+LANGS[k].label+'</span>'+icon('check','lp-check');
+    li.addEventListener('click', ()=>{
+      const t = currentTab(); if(!t) return;
+      t.lang = k;
+      editor.setOption("mode", LANGS[t.lang].mode || null);
+      document.getElementById('langPickerLabel').textContent = LANGS[k].label;
+      closeLangPicker();
+      updateStatus(); persistProject();
+    });
+    ul.appendChild(li);
+  });
+}
+function openLangPicker(){
+  const t = currentTab();
+  document.querySelectorAll('#langPickerList .lp-item').forEach(li=>{
+    li.classList.toggle('selected', t && li.dataset.key===t.lang);
+  });
+  document.getElementById('langPickerOverlay').classList.add('open');
+  if(t){
+    const sel = document.querySelector('#langPickerList .lp-item.selected');
+    if(sel) sel.scrollIntoView({block:'center'});
+  }
+}
+function closeLangPicker(){ document.getElementById('langPickerOverlay').classList.remove('open'); }
+document.getElementById('langPickerBtn').addEventListener('click', openLangPicker);
+document.getElementById('langPickerClose').addEventListener('click', closeLangPicker);
+document.getElementById('langPickerOverlay').addEventListener('click', (e)=>{
+  if(e.target.id === 'langPickerOverlay') closeLangPicker();
+});
+function setLangPickerLabel(key){
+  document.getElementById('langPickerLabel').textContent = LANGS[key] ? LANGS[key].label : '—';
+}
+
+/* ---------- CodeMirror instance ---------- */
+const editor = CodeMirror.fromTextArea(document.getElementById('cmHost'), {
+  lineNumbers:true,
+  mode:"javascript",
+  indentUnit:2,
+  tabSize:2,
+  indentWithTabs:false,
+  matchBrackets:true,
+  autoCloseBrackets:true,
+  styleActiveLine:true,
+  foldGutter:true,
+  gutters:["CodeMirror-linenumbers","CodeMirror-foldgutter"],
+  lineWrapping:false,
+  extraKeys:{
+    "Ctrl-S":()=>{saveCurrent();return false;},
+    "Cmd-S":()=>{saveCurrent();return false;},
+    "Ctrl-F":"findPersistent",
+    "Ctrl-H":"replace",
+    "Ctrl-G":"jumpToLine",
+    "Ctrl-D": duplicateLine,
+    "Ctrl-/":"toggleComment",
+    "Ctrl-Shift-K":"deleteLine",
+    "Alt-Up":"swapLineUp",
+    "Alt-Down":"swapLineDown",
+    "Tab": cm=>{
+      if(cm.somethingSelected()) cm.execCommand("indentMore");
+      else cm.replaceSelection("  ", "end");
+    }
+  }
+});
+
+/* ---------- Tabs / Docs state (current project's open files) ---------- */
+let tabs = [];      // {id, name, lang, doc, saved}
+let activeId = null;
+let tabCounter = 0;
+let currentProjectId = null;
+
+function uid(){ return 't'+(++tabCounter)+'_'+Date.now().toString(36); }
+
+function newDocFor(content, langKey){
+  return new CodeMirror.Doc(content || "", LANGS[langKey].mode || null);
+}
+
+function createTab(name, content, langKey, silent){
+  langKey = langKey || detectLangFromName(name) || "javascript";
+  const t = { id: uid(), name: name, lang: langKey, doc: newDocFor(content, langKey), saved:true };
+  tabs.push(t);
+  renderTabs();
+  switchTab(t.id);
+  if(!silent) persistProject();
+  return t;
+}
+
+function detectLangFromName(name){
+  const ext = (name.split('.').pop()||"").toLowerCase();
+  return EXT_TO_LANG[ext] || null;
+}
+
+function currentTab(){ return tabs.find(t=>t.id===activeId); }
+
+function switchTab(id){
+  activeId = id;
+  const t = currentTab();
+  if(!t) return;
+  editor.swapDoc(t.doc);
+  if(LANGS[t.lang].mode) editor.setOption("mode", LANGS[t.lang].mode);
+  else editor.setOption("mode", null);
+  setLangPickerLabel(t.lang);
+  renderTabs();
+  updateStatus();
+  editor.focus();
+}
+
+function closeTab(id, force){
+  const idx = tabs.findIndex(t=>t.id===id);
+  if(idx===-1) return;
+  const t = tabs[idx];
+  if(!force && !t.saved){
+    showConfirm('Unsaved changes', '"'+t.name+'" has unsaved changes. Close anyway?', ()=> closeTab(id, true));
+    return;
+  }
+  tabs.splice(idx,1);
+  if(tabs.length===0){
+    createTab("untitled-1.js", DEFAULT_SAMPLE, "javascript", true);
+    persistProject();
+    return;
+  }
+  if(activeId===id){
+    const next = tabs[idx] || tabs[idx-1] || tabs[0];
+    switchTab(next.id);
+  }
+  renderTabs();
+  persistProject();
+}
+
+function renderTabs(){
+  const bar = document.getElementById('tabbar');
+  bar.innerHTML = "";
+  tabs.forEach(t=>{
+    const el = document.createElement('div');
+    el.className = 'tab' + (t.id===activeId ? ' active':'') + (!t.saved ? ' unsaved':'');
+    el.title = t.name;
+    el.innerHTML = '<span class="tdot"></span><span class="tname">'+escapeHtml(t.name)+'</span><button class="tclose">'+icon('close','icon-sm')+'</button>';
+    el.addEventListener('click', (e)=>{ if(e.target.closest('.tclose')) return; switchTab(t.id); });
+    el.addEventListener('dblclick', ()=> renameTab(t.id));
+    el.querySelector('.tclose').addEventListener('click', (e)=>{ e.stopPropagation(); closeTab(t.id); });
+    bar.appendChild(el);
+  });
+  const plus = document.createElement('button');
+  plus.id='newTabBtn2'; plus.className='tb-btn';
+  plus.innerHTML = icon('plus')+' New';
+  plus.addEventListener('click', ()=> promptNewFile());
+  bar.appendChild(plus);
+}
+
+function renameTab(id){
+  const t = tabs.find(x=>x.id===id);
+  if(!t) return;
+  openModal("Rename file", t.name, (val)=>{
+    if(!val) return;
+    t.name = val;
+    const detected = detectLangFromName(val);
+    if(detected){ t.lang = detected; if(t.id===activeId) switchTab(t.id); }
+    renderTabs(); persistProject();
+  });
+}
+
+/* ---------- Escaping ---------- */
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/* ---------- New / Open / Save ---------- */
+function promptNewFile(){
+  openModal("New file name", "untitled-"+(tabs.length+1)+".js", (val)=>{
+    if(!val) return;
+    createTab(val, "", null);
+  });
+}
+document.getElementById('btnNew').onclick = promptNewFile;
+
+document.getElementById('btnOpen').onclick = ()=> document.getElementById('fileInput').click();
+document.getElementById('fileInput').addEventListener('change', (e)=>{
+  const files = Array.from(e.target.files||[]);
+  files.forEach(f=>{
+    const reader = new FileReader();
+    reader.onload = ()=> createTab(f.name, reader.result, detectLangFromName(f.name));
+    reader.readAsText(f);
+  });
+  e.target.value = "";
+});
+
+function downloadTab(t){
+  const blob = new Blob([t.doc.getValue()], {type:"text/plain;charset=utf-8"});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = t.name;
+  document.body.appendChild(a); a.click(); a.remove();
+  t.saved = true; renderTabs(); persistProject();
+  toast("Saved "+t.name);
+}
+function saveCurrent(){ const t = currentTab(); if(t) downloadTab(t); }
+document.getElementById('btnSave').onclick = saveCurrent;
+document.getElementById('btnSaveAll').onclick = ()=>{
+  tabs.forEach((t,i)=> setTimeout(()=>downloadTab(t), i*250));
+};
+
+/* ---------- Font size / theme ---------- */
+let fontSize = 14;
+document.getElementById('btnFontPlus').onclick = ()=>{ fontSize=Math.min(28,fontSize+1); applyFont(); };
+document.getElementById('btnFontMinus').onclick = ()=>{ fontSize=Math.max(9,fontSize-1); applyFont(); };
+function applyFont(){ const cm=document.querySelector('.CodeMirror'); if(cm){ cm.style.fontSize = fontSize+"px"; editor.refresh(); } }
+
+document.getElementById('btnTheme').onclick = ()=>{
+  const html = document.documentElement;
+  const cur = html.getAttribute('data-theme');
+  html.setAttribute('data-theme', cur==='light' ? 'dark' : 'light');
+  editor.refresh();
+};
+
+/* ---------- Status bar ---------- */
+function updateStatus(){
+  const t = currentTab(); if(!t) return;
+  document.getElementById('sbLang').textContent = LANGS[t.lang].label;
+  document.getElementById('sbLen').textContent = t.doc.getValue().length + " chars";
+  document.getElementById('sbLines').textContent = t.doc.lineCount() + " lines";
+  const cur = editor.getCursor();
+  document.getElementById('sbPos').textContent = "Ln "+(cur.line+1)+", Col "+(cur.ch+1);
+}
+editor.on('cursorActivity', updateStatus);
+editor.on('change', ()=>{
+  const t = currentTab();
+  if(t){ t.saved = false; renderTabs(); }
+  updateStatus();
+  debouncedPersist();
+});
+
+/* ---------- Menus ---------- */
+const mainMenuBtn = document.getElementById('mainMenuBtn');
+const editMenuBtn = document.getElementById('editMenuBtn');
+const mainMenu = document.getElementById('mainMenu');
+const editMenu = document.getElementById('editMenu');
+
+mainMenuBtn.onclick = (e)=>{ e.stopPropagation(); editMenu.classList.remove('open'); mainMenu.classList.toggle('open'); };
+editMenuBtn.onclick = (e)=>{ e.stopPropagation(); mainMenu.classList.remove('open'); editMenu.classList.toggle('open'); };
+document.addEventListener('click', ()=>{ mainMenu.classList.remove('open'); editMenu.classList.remove('open'); });
+
+mainMenu.addEventListener('click', (e)=>{
+  const item = e.target.closest('.menu-item'); if(!item) return;
+  runAction(item.dataset.action);
+});
+editMenu.addEventListener('click', (e)=>{
+  const item = e.target.closest('.menu-item'); if(!item) return;
+  runAction(item.dataset.action);
+});
+
+function runAction(action){
+  switch(action){
+    case 'goHome': goHome(); break;
+    case 'viewHtml': openPreview(); break;
+    case 'autoDeleteError': autoDeleteErrors(); break;
+    case 'detectError': openErrorsPanel(); break;
+    case 'pythonRunner': openPythonPanel(); break;
+    case 'terminal': openTerminalPanel(); break;
+    case 'filesPanel': openFilesPanel(); break;
+    case 'about': openAbout(); break;
+
+    case 'find': editor.execCommand('findPersistent'); break;
+    case 'replace': editor.execCommand('replace'); break;
+    case 'gotoLine': editor.execCommand('jumpToLine'); break;
+    case 'selectAll': editor.execCommand('selectAll'); break;
+    case 'duplicateLine': duplicateLine(editor); break;
+    case 'deleteLine': editor.execCommand('deleteLine'); break;
+    case 'moveLineUp': editor.execCommand('swapLineUp'); break;
+    case 'moveLineDown': editor.execCommand('swapLineDown'); break;
+    case 'toggleComment': editor.execCommand('toggleComment'); break;
+    case 'indentMore': editor.execCommand('indentMore'); break;
+    case 'indentLess': editor.execCommand('indentLess'); break;
+    case 'upper': caseConvert('upper'); break;
+    case 'lower': caseConvert('lower'); break;
+    case 'trim': trimTrailing(); break;
+    case 'sortLines': sortLines(); break;
+    case 'format': basicFormat(); break;
+    case 'wordWrap': editor.setOption('lineWrapping', !editor.getOption('lineWrapping')); toast('Word wrap: '+(editor.getOption('lineWrapping')?'ON':'OFF')); break;
+    case 'autoClose': editor.setOption('autoCloseBrackets', !editor.getOption('autoCloseBrackets')); toast('Auto-close brackets: '+(editor.getOption('autoCloseBrackets')?'ON':'OFF')); break;
+    case 'copyAll': copyAllToClipboard(); break;
+    case 'fullscreen': toggleFullscreen(); break;
+  }
+}
+
+function duplicateLine(cm){
+  const cur = cm.getCursor();
+  const line = cm.getLine(cur.line);
+  cm.replaceRange(line+"\n", {line:cur.line, ch:0});
+}
+
+function caseConvert(mode){
+  if(!editor.somethingSelected()){ toast("Select text first"); return; }
+  const sel = editor.getSelection();
+  editor.replaceSelection(mode==='upper' ? sel.toUpperCase() : sel.toLowerCase());
+}
+
+function trimTrailing(){
+  const t = currentTab(); if(!t) return;
+  const lines = t.doc.getValue().split("\n").map(l=>l.replace(/[ \t]+$/,''));
+  const cur = editor.getCursor();
+  t.doc.setValue(lines.join("\n"));
+  editor.setCursor(cur);
+  toast("Trailing whitespace trimmed");
+}
+
+function sortLines(){
+  const t = currentTab(); if(!t) return;
+  const lines = t.doc.getValue().split("\n").sort((a,b)=>a.localeCompare(b));
+  t.doc.setValue(lines.join("\n"));
+  toast("Lines sorted A-Z");
+}
+
+function basicFormat(){
+  const t = currentTab(); if(!t) return;
+  if(t.lang==='json'){
+    try{
+      const parsed = JSON.parse(t.doc.getValue());
+      t.doc.setValue(JSON.stringify(parsed, null, 2));
+      toast("JSON formatted");
+    }catch(e){ toast("Cannot format: invalid JSON"); }
+    return;
+  }
+  const lines = t.doc.getValue().split("\n");
+  let depth = 0;
+  const out = lines.map(raw=>{
+    let line = raw.trim();
+    if(/^[\}\)\]]/.test(line)) depth = Math.max(0, depth-1);
+    const indented = "  ".repeat(depth) + line;
+    if(/[\{\(\[]\s*$/.test(line)) depth++;
+    return indented;
+  });
+  t.doc.setValue(out.join("\n"));
+  toast("Basic re-indent applied");
+}
+
+function copyAllToClipboard(){
+  const t = currentTab(); if(!t) return;
+  const text = t.doc.getValue();
+  // navigator.clipboard often fails silently inside a bare Android WebView
+  // (no permission / not a secure context in the WebView's eyes), so we
+  // fall back to a hidden textarea + execCommand('copy') which works in
+  // nearly every WebView build.
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(()=>toast("Copied to clipboard")).catch(()=>fallbackCopy(text));
+  } else {
+    fallbackCopy(text);
+  }
+}
+function fallbackCopy(text){
+  try{
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.focus(); ta.select();
+    const ok = document.execCommand('copy');
+    document.body.removeChild(ta);
+    toast(ok ? "Copied to clipboard" : "Copy failed (WebView clipboard restricted)");
+  }catch(e){ toast("Copy failed: "+e.message); }
+}
+
+function toggleFullscreen(){
+  if(!document.fullscreenElement){ document.documentElement.requestFullscreen().catch(()=>toast("Fullscreen not available in this WebView")); }
+  else { document.exitFullscreen(); }
+}
+
+/* ---------- Modal helper (text input, replaces window.prompt) ---------- */
+let modalCb = null;
+function openModal(title, value, cb){
+  document.getElementById('modalTitle').textContent = title;
+  const input = document.getElementById('modalInput');
+  input.value = value || "";
+  modalCb = cb;
+  document.getElementById('modalOverlay').classList.add('open');
+  setTimeout(()=>{ input.focus(); input.select(); }, 30);
+}
+document.getElementById('modalCancel').onclick = ()=> document.getElementById('modalOverlay').classList.remove('open');
+document.getElementById('modalOk').onclick = ()=>{
+  document.getElementById('modalOverlay').classList.remove('open');
+  if(modalCb) modalCb(document.getElementById('modalInput').value.trim());
+};
+document.getElementById('modalInput').addEventListener('keydown', (e)=>{
+  if(e.key==='Enter') document.getElementById('modalOk').click();
+  if(e.key==='Escape') document.getElementById('modalCancel').click();
+});
+
+/* ---------- Confirm modal helper (replaces window.confirm) ---------- */
+let confirmCb = null;
+function showConfirm(title, message, onOk, opts){
+  document.getElementById('confirmTitle').textContent = title;
+  document.getElementById('confirmMsg').textContent = message;
+  const okBtn = document.getElementById('confirmOk');
+  okBtn.className = (opts && opts.danger) ? 'danger' : 'primary';
+  confirmCb = onOk;
+  document.getElementById('confirmOverlay').classList.add('open');
+}
+document.getElementById('confirmCancel').onclick = ()=>{ document.getElementById('confirmOverlay').classList.remove('open'); confirmCb=null; };
+document.getElementById('confirmOk').onclick = ()=>{
+  document.getElementById('confirmOverlay').classList.remove('open');
+  const cb = confirmCb; confirmCb = null;
+  if(cb) cb();
+};
+
+/* ---------- Toast ---------- */
+let toastTimer;
+function toast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> el.classList.remove('show'), 2200);
+}
+
+/* ---------- Panels open/close ---------- */
+function closeAllPanels(){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('open'));
+}
+function openPreview(){
+  closeAllPanels();
+  const t = currentTab(); if(!t) return;
+  const frame = document.getElementById('previewFrame');
+  let html = t.doc.getValue();
+  if(t.lang !== 'html'){
+    html = '<pre style="font-family:monospace;white-space:pre-wrap;padding:12px;">'+escapeHtml(html)+'</pre>';
+  }
+  frame.srcdoc = html;
+  document.getElementById('panelPreview').classList.add('open');
+}
+document.getElementById('previewRefresh').onclick = openPreview;
+document.getElementById('previewClose').onclick = closeAllPanels;
+
+function openErrorsPanel(){
+  closeAllPanels();
+  document.getElementById('panelErrors').classList.add('open');
+  runDetection();
+}
+document.getElementById('errorsClose').onclick = closeAllPanels;
+document.getElementById('btnRunDetect').onclick = runDetection;
+document.getElementById('btnRunAutoDelete').onclick = autoDeleteErrors;
+
+function openPythonPanel(){
+  closeAllPanels();
+  document.getElementById('panelPython').classList.add('open');
+  ensurePyodide();
+}
+document.getElementById('pyClose').onclick = closeAllPanels;
+document.getElementById('btnPyClear').onclick = ()=> document.getElementById('pyOutput').textContent = "";
+document.getElementById('btnPyRun').onclick = runPython;
+
+function openTerminalPanel(){
+  closeAllPanels();
+  document.getElementById('panelTerminal').classList.add('open');
+  document.getElementById('termInput').focus();
+}
+document.getElementById('termClose').onclick = closeAllPanels;
+document.getElementById('btnTermClear').onclick = ()=> document.getElementById('termOutput').textContent = "";
+
+function openAbout(){ closeAllPanels(); document.getElementById('panelAbout').classList.add('open'); }
+document.getElementById('aboutClose').onclick = closeAllPanels;
+
+/* ---------- Select File sidebar ---------- */
+function openFilesPanel(){
+  closeAllPanels();
+  renderFileSelect();
+  document.getElementById('panelFiles').classList.add('open');
+}
+function renderFileSelect(){
+  const ul = document.getElementById('fileSelectList');
+  ul.innerHTML = '';
+  tabs.forEach(t=>{
+    const li = document.createElement('li');
+    li.className = 'fsl-item'+(t.id===activeId?' active':'');
+    li.innerHTML = icon('file')+'<span class="fsl-name">'+escapeHtml(t.name)+'</span><span class="fsl-lang">'+LANGS[t.lang].label+'</span><button class="icon-btn fsl-del" title="Delete">'+icon('trash','icon-sm')+'</button>';
+    li.addEventListener('click', (e)=>{ if(e.target.closest('.fsl-del')) return; switchTab(t.id); closeAllPanels(); });
+    li.querySelector('.fsl-del').addEventListener('click', (e)=>{ e.stopPropagation(); closeTab(t.id); renderFileSelect(); });
+    ul.appendChild(li);
+  });
+}
+document.getElementById('filesClose').onclick = closeAllPanels;
+document.getElementById('btnFiles').onclick = openFilesPanel;
+document.getElementById('btnFilesAdd').onclick = ()=>{
+  openModal("New file name", "untitled-"+(tabs.length+1)+".js", (val)=>{
+    if(!val) return;
+    createTab(val, "", null);
+    renderFileSelect();
+  });
+};
+
+/* ---------- Quick terminal dock ---------- */
+const termDock = document.getElementById('termDock');
+document.getElementById('btnQuickTerminal').onclick = ()=>{
+  termDock.classList.toggle('open');
+  if(termDock.classList.contains('open')) document.getElementById('dockInput').focus();
+};
+document.getElementById('dockClose').onclick = ()=> termDock.classList.remove('open');
+document.getElementById('dockClear').onclick = ()=> document.getElementById('dockOutput').textContent = "";
+document.getElementById('dockInput').addEventListener('keydown', (e)=>{
+  if(e.key==='Enter'){
+    const cmd = e.target.value; e.target.value = "";
+    runTerminalCommand(cmd, document.getElementById('dockOutput'));
+  }
+});
+document.getElementById('termInput').addEventListener('keydown', (e)=>{
+  if(e.key==='Enter'){
+    const cmd = e.target.value; e.target.value = "";
+    runTerminalCommand(cmd, document.getElementById('termOutput'));
+  }
+});
+
+/* ===================== ERROR DETECTION ===================== */
+function detectBracketErrors(code){
+  const pairs = {')':'(', ']':'[', '}':'{'};
+  const openers = ['(','[','{'];
+  const stack = [];
+  const errors = [];
+  let line = 1;
+  let inStr = null, escape=false;
+  for(let i=0;i<code.length;i++){
+    const c = code[i];
+    if(c === "\n") line++;
+    if(inStr){
+      if(escape){ escape=false; }
+      else if(c === "\\"){ escape=true; }
+      else if(c === inStr){ inStr = null; }
+      continue;
+    }
+    if(c === '"' || c === "'" || c === '`'){ inStr = c; continue; }
+    if(openers.includes(c)) stack.push({c,line});
+    else if(pairs[c]){
+      if(stack.length===0 || stack[stack.length-1].c !== pairs[c]){
+        errors.push({line, message:'Unexpected closing "'+c+'" with no matching opener'});
+      } else stack.pop();
+    }
+  }
+  stack.forEach(s=> errors.push({line:s.line, message:'Unclosed "'+s.c+'" was never closed'}));
+  return errors;
+}
+
+function detectJSErrors(code){
+  const errors = [];
+  try{ new Function(code); }
+  catch(e){
+    let ln = 1;
+    const m = e.stack && e.stack.match(/<anonymous>:(\d+):(\d+)/);
+    if(m) ln = Math.max(1, parseInt(m[1],10) - 2);
+    errors.push({line: ln, message: e.message + " (approximate line)"});
+  }
+  return errors.concat(detectBracketErrors(code));
+}
+
+function detectJSONErrors(code){
+  try{ JSON.parse(code); return []; }
+  catch(e){
+    let ln = 1;
+    const m = e.message.match(/position (\d+)/);
+    if(m){ ln = code.slice(0, parseInt(m[1],10)).split("\n").length; }
+    return [{line: ln, message: e.message}];
+  }
+}
+
+async function detectPythonErrors(code){
+  if(window.__pyodide){
+    try{
+      window.__pyodide.globals.set("__mc_src", code);
+      const res = window.__pyodide.runPython(
+        "import ast\ntry:\n ast.parse(__mc_src)\n __mc_err=None\nexcept SyntaxError as e:\n __mc_err=(e.lineno, str(e))\n__mc_err"
+      );
+      if(res){
+        const [ln, msg] = res.toJs();
+        return [{line: ln||1, message: msg}];
+      }
+      return [];
+    }catch(e){ /* fall through to bracket check */ }
+  }
+  return detectBracketErrors(code);
+}
+
+async function runDetection(){
+  const t = currentTab(); if(!t) return [];
+  const code = t.doc.getValue();
+  let errors = [];
+  if(t.lang === 'javascript' || t.lang === 'typescript' || t.lang === 'jsx') errors = detectJSErrors(code);
+  else if(t.lang === 'json') errors = detectJSONErrors(code);
+  else if(t.lang === 'python') errors = await detectPythonErrors(code);
+  else errors = detectBracketErrors(code);
+
+  renderErrors(errors);
+  return errors;
+}
+
+function renderErrors(errors){
+  const list = document.getElementById('errList');
+  const empty = document.getElementById('errEmpty');
+  list.innerHTML = "";
+  if(errors.length === 0){ empty.style.display='flex'; return; }
+  empty.style.display='none';
+  errors.forEach(err=>{
+    const li = document.createElement('li');
+    li.innerHTML = '<span class="eline">Ln '+err.line+'</span><span class="emsg">'+escapeHtml(err.message)+'</span>';
+    li.onclick = ()=>{ closeAllPanels(); editor.setCursor({line:Math.max(0,err.line-1), ch:0}); editor.focus(); };
+    list.appendChild(li);
+  });
+}
+
+async function autoDeleteErrors(){
+  const t = currentTab(); if(!t) return;
+  const doPass = async ()=>{
+    let removedTotal = 0;
+    for(let pass=0; pass<5; pass++){
+      const errors = await (async()=>{
+        const code = t.doc.getValue();
+        if(t.lang === 'javascript' || t.lang === 'typescript' || t.lang === 'jsx') return detectJSErrors(code);
+        if(t.lang === 'json') return detectJSONErrors(code);
+        if(t.lang === 'python') return await detectPythonErrors(code);
+        return detectBracketErrors(code);
+      })();
+      const validLines = [...new Set(errors.map(e=>e.line).filter(l=>l>=1 && l<=t.doc.lineCount()))];
+      if(validLines.length===0) break;
+      validLines.sort((a,b)=>b-a).forEach(ln=>{
+        t.doc.replaceRange("", {line:ln-1, ch:0}, {line:ln, ch:0});
+        removedTotal++;
+      });
+    }
+    toast(removedTotal>0 ? 'Auto Delete Error: removed '+removedTotal+' line(s)' : "No errors to remove");
+    if(document.getElementById('panelErrors').classList.contains('open')) runDetection();
+    persistProject();
+  };
+  const errors = t.lang === 'javascript' || t.lang === 'typescript' || t.lang === 'jsx' ? detectJSErrors(t.doc.getValue())
+    : t.lang === 'json' ? detectJSONErrors(t.doc.getValue())
+    : t.lang === 'python' ? await detectPythonErrors(t.doc.getValue())
+    : detectBracketErrors(t.doc.getValue());
+  const validLines = [...new Set(errors.map(e=>e.line).filter(l=>l>=1 && l<=t.doc.lineCount()))];
+  if(validLines.length===0){ toast("No errors to remove"); return; }
+  showConfirm('Auto Delete Error', 'Detected '+errors.length+' issue(s) on '+validLines.length+' line(s). Auto-delete those lines?', doPass);
+}
+
+/* ===================== PYTHON RUNNER (Pyodide) ===================== */
+let pyodideLoading = null;
+function ensurePyodide(){
+  if(window.__pyodide) return Promise.resolve(window.__pyodide);
+  if(pyodideLoading) return pyodideLoading;
+  const out = document.getElementById('pyOutput');
+  out.textContent += "\n[loading pyodide runtime...]\n";
+  pyodideLoading = new Promise((resolve, reject)=>{
+    const script = document.createElement('script');
+    script.src = "https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js";
+    script.onload = async ()=>{
+      try{
+        window.__pyodide = await loadPyodide();
+        out.textContent += "[pyodide ready]\n";
+        resolve(window.__pyodide);
+      }catch(e){ out.textContent += "[failed to init pyodide: "+e.message+"]\n"; reject(e); }
+    };
+    script.onerror = ()=>{ out.textContent += "[could not load pyodide — check internet connection]\n"; reject(new Error("load failed")); };
+    document.head.appendChild(script);
+  });
+  return pyodideLoading;
+}
+
+async function runPython(){
+  const t = currentTab(); if(!t) return;
+  const out = document.getElementById('pyOutput');
+  if(t.lang !== 'python'){ toast("Current tab is not Python"); }
+  out.textContent += "\n>>> Running "+t.name+"...\n";
+  try{
+    const py = await ensurePyodide();
+    py.setStdout({batched:(s)=>{ out.textContent += s+"\n"; out.scrollTop = out.scrollHeight; }});
+    py.setStderr({batched:(s)=>{ out.textContent += "[stderr] "+s+"\n"; out.scrollTop = out.scrollHeight; }});
+    await py.runPythonAsync(t.doc.getValue());
+    out.textContent += "[done]\n";
+  }catch(e){
+    out.textContent += "Traceback:\n"+e.message+"\n";
+  }
+  out.scrollTop = out.scrollHeight;
+}
+
+/* ===================== TERMINAL SIMULATOR ===================== */
+function termPrint(container, text){
+  container.textContent += text + "\n";
+  container.scrollTop = container.scrollHeight;
+}
+
+async function runTerminalCommand(raw, out){
+  const cmd = raw.trim();
+  termPrint(out, "$ "+cmd);
+  if(!cmd) return;
+  const [name, ...rest] = cmd.split(" ");
+  const arg = rest.join(" ");
+  switch(name){
+    case 'help':
+      termPrint(out, "Available commands:\n help, clear, ls, cat <file>, run <file>, echo <text>,\n date, whoami, pwd, about, exit");
+      break;
+    case 'clear': out.textContent = ""; break;
+    case 'ls': termPrint(out, tabs.map(t=>t.name).join("  ") || "(no files open)"); break;
+    case 'cat': {
+      const f = tabs.find(t=>t.name===arg);
+      termPrint(out, f ? f.doc.getValue() : "cat: "+arg+": No such file");
+      break;
+    }
+    case 'run': {
+      const f = tabs.find(t=>t.name===arg);
+      if(!f){ termPrint(out, "run: "+arg+": No such file"); break; }
+      if(f.lang==='python'){
+        try{
+          const py = await ensurePyodide();
+          py.setStdout({batched:(s)=>termPrint(out, s)});
+          py.setStderr({batched:(s)=>termPrint(out, "[stderr] "+s)});
+          await py.runPythonAsync(f.doc.getValue());
+        }catch(e){ termPrint(out, "Error: "+e.message); }
+      } else if(f.lang==='javascript'){
+        const origLog = console.log;
+        try{
+          console.log = (...a)=> termPrint(out, a.join(" "));
+          new Function(f.doc.getValue())();
+        }catch(e){ termPrint(out, "Error: "+e.message); }
+        finally{ console.log = origLog; }
+      } else {
+        termPrint(out, "run: cannot execute ."+f.name.split('.').pop()+" files in this sandbox");
+      }
+      break;
+    }
+    case 'echo': termPrint(out, arg); break;
+    case 'date': termPrint(out, new Date().toString()); break;
+    case 'whoami': termPrint(out, "guest@mobilecodes"); break;
+    case 'pwd': termPrint(out, "/home/guest/mobilecodes"); break;
+    case 'about': termPrint(out, "MobileCodes Terminal — simulated sandbox shell."); break;
+    case 'exit': termPrint(out, "(cannot close from here — use the close button)"); break;
+    default: termPrint(out, name+": command not found. Type 'help'.");
+  }
+}
+
+/* ===================== PROJECTS (Home screen) ===================== */
+const PROJECTS_KEY = 'mc_projects_v1';
+const OLD_STATE_KEY = 'mobilecodes_state';
+
+function loadProjectsStore(){
+  try{ return JSON.parse(localStorage.getItem(PROJECTS_KEY)) || []; }
+  catch(e){ return []; }
+}
+function saveProjectsStore(list){
+  try{ localStorage.setItem(PROJECTS_KEY, JSON.stringify(list)); return true; }
+  catch(e){ toast('Local storage save failed'); return false; }
+}
+function newProjectId(){ return 'p_'+Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+function newFileId(){ return 'f_'+Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+
+function migrateOldState(){
+  if(loadProjectsStore().length) return;
+  const list = [];
+  const old = localStorage.getItem(OLD_STATE_KEY);
+  if(old){
+    try{
+      const data = JSON.parse(old);
+      if(data.tabs && data.tabs.length){
+        list.push({
+          id: newProjectId(),
+          name: 'My Project',
+          files: data.tabs.map(t=>({id:newFileId(), name:t.name, lang:t.lang, content:t.content})),
+          activeFileId: null,
+          updatedAt: Date.now()
+        });
+      }
+    }catch(e){}
+  }
+  if(list.length===0){
+    list.push({
+      id: newProjectId(),
+      name: 'My First Project',
+      files: [{id:newFileId(), name:'welcome.js', lang:'javascript', content: DEFAULT_SAMPLE}],
+      activeFileId: null,
+      updatedAt: Date.now()
+    });
+  }
+  saveProjectsStore(list);
+}
+
+function timeAgo(ts){
+  if(!ts) return 'just now';
+  const s = Math.floor((Date.now()-ts)/1000);
+  if(s<60) return 'just now';
+  if(s<3600) return Math.floor(s/60)+'m ago';
+  if(s<86400) return Math.floor(s/3600)+'h ago';
+  if(s<604800) return Math.floor(s/86400)+'d ago';
+  return new Date(ts).toLocaleDateString();
+}
+
+function renderHome(){
+  const list = loadProjectsStore();
+  list.sort((a,b)=> (b.updatedAt||0)-(a.updatedAt||0));
+  const grid = document.getElementById('projectGrid');
+  grid.innerHTML = '';
+  document.getElementById('homeEmpty').classList.toggle('hidden', list.length>0);
+  list.forEach(p=>{
+    const card = document.createElement('div');
+    card.className = 'project-card';
+    card.innerHTML =
+      '<div class="pc-icon">'+icon('folder')+'</div>'+
+      '<div class="pc-body">'+
+        '<div class="pc-name">'+escapeHtml(p.name)+'</div>'+
+        '<div class="pc-meta">'+p.files.length+' file'+(p.files.length!==1?'s':'')+' · '+timeAgo(p.updatedAt)+'</div>'+
+      '</div>'+
+      '<div class="pc-actions">'+
+        '<button class="icon-btn pc-act" data-act="rename" title="Rename">'+icon('edit','icon-sm')+'</button>'+
+        '<button class="icon-btn pc-act" data-act="export" title="Export ZIP">'+icon('archive','icon-sm')+'</button>'+
+        '<button class="icon-btn pc-act" data-act="delete" title="Delete">'+icon('trash','icon-sm')+'</button>'+
+      '</div>';
+    card.addEventListener('click', (e)=>{ if(e.target.closest('.pc-act')) return; openProject(p.id); });
+    card.querySelector('[data-act="rename"]').onclick = (e)=>{ e.stopPropagation(); renameProject(p.id); };
+    card.querySelector('[data-act="export"]').onclick = (e)=>{ e.stopPropagation(); exportProjectZip(p.id); };
+    card.querySelector('[data-act="delete"]').onclick = (e)=>{ e.stopPropagation(); deleteProject(p.id); };
+    grid.appendChild(card);
+  });
+}
+
+function openProject(id){
+  const list = loadProjectsStore();
+  const p = list.find(x=>x.id===id);
+  if(!p) return;
+  currentProjectId = id;
+  tabs = [];
+  activeId = null;
+  p.files.forEach(f=> createTab(f.name, f.content, f.lang, true));
+  const target = tabs[0];
+  if(target) switchTab(target.id);
+  document.getElementById('homeView').classList.add('hidden');
+  document.getElementById('editorView').classList.remove('hidden');
+  document.getElementById('editorTitle').innerHTML = 'Mobile<span>Codes</span> — '+escapeHtml(p.name);
+  editor.refresh();
+  applyFont();
+}
+
+function goHome(){
+  persistProject();
+  currentProjectId = null;
+  document.getElementById('editorView').classList.add('hidden');
+  document.getElementById('homeView').classList.remove('hidden');
+  renderHome();
+}
+document.getElementById('btnGoHome').onclick = goHome;
+
+function persistProject(){
+  if(!currentProjectId) return;
+  const list = loadProjectsStore();
+  const idx = list.findIndex(x=>x.id===currentProjectId);
+  if(idx===-1) return;
+  list[idx].files = tabs.map(t=>({id:t.id, name:t.name, lang:t.lang, content:t.doc.getValue()}));
+  list[idx].activeFileId = activeId;
+  list[idx].updatedAt = Date.now();
+  saveProjectsStore(list);
+  const sb = document.getElementById('sbSave');
+  sb.innerHTML = icon('save','icon-sm')+' Autosaved';
+}
+let persistTimer;
+function debouncedPersist(){
+  const sb = document.getElementById('sbSave');
+  sb.innerHTML = icon('refresh','icon-sm')+' Saving...';
+  clearTimeout(persistTimer);
+  persistTimer = setTimeout(persistProject, 600);
+}
+
+document.getElementById('btnNewProject').onclick = ()=>{
+  openModal('New project name', 'My Project', (val)=>{
+    if(!val) return;
+    const list = loadProjectsStore();
+    const p = {
+      id: newProjectId(), name: val,
+      files: [{id:newFileId(), name:'main.js', lang:'javascript', content: DEFAULT_SAMPLE}],
+      activeFileId: null, updatedAt: Date.now()
+    };
+    list.push(p);
+    saveProjectsStore(list);
+    renderHome();
+    openProject(p.id);
+  });
+};
+
+function renameProject(id){
+  const list = loadProjectsStore();
+  const p = list.find(x=>x.id===id); if(!p) return;
+  openModal('Rename project', p.name, (val)=>{
+    if(!val) return;
+    p.name = val; p.updatedAt = Date.now();
+    saveProjectsStore(list);
+    renderHome();
+    if(currentProjectId===id) document.getElementById('editorTitle').innerHTML = 'Mobile<span>Codes</span> — '+escapeHtml(val);
+  });
+}
+
+function deleteProject(id){
+  showConfirm('Delete project', 'Delete this project and all its files? This cannot be undone.', ()=>{
+    let list = loadProjectsStore();
+    list = list.filter(x=>x.id!==id);
+    saveProjectsStore(list);
+    if(currentProjectId===id) currentProjectId = null;
+    renderHome();
+    toast('Project deleted');
+  }, {danger:true});
+}
+
+async function exportProjectZip(id){
+  if(currentProjectId===id) persistProject();
+  const list = loadProjectsStore();
+  const p = list.find(x=>x.id===id); if(!p) return;
+  if(typeof JSZip === 'undefined'){ toast('ZIP library unavailable — check internet connection'); return; }
+  const zip = new JSZip();
+  p.files.forEach(f=> zip.file(f.name, f.content));
+  const blob = await zip.generateAsync({type:'blob'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = p.name.replace(/[^a-z0-9\-_ ]/gi,'_') + '.zip';
+  document.body.appendChild(a); a.click(); a.remove();
+  toast('Project exported as ZIP');
+}
+
+document.getElementById('btnImportProject').onclick = ()=> document.getElementById('projectZipInput').click();
+document.getElementById('projectZipInput').addEventListener('change', async (e)=>{
+  const file = e.target.files[0]; e.target.value = '';
+  if(!file) return;
+  if(typeof JSZip === 'undefined'){ toast('ZIP library unavailable — check internet connection'); return; }
+  try{
+    const zip = await JSZip.loadAsync(file);
+    const files = [];
+    for(const name of Object.keys(zip.files)){
+      const entry = zip.files[name];
+      if(entry.dir) continue;
+      const content = await entry.async('string');
+      files.push({id:newFileId(), name:name.split('/').pop(), lang: detectLangFromName(name)||'plaintext', content});
+    }
+    if(files.length===0){ toast('ZIP has no readable files'); return; }
+    const list = loadProjectsStore();
+    const p = { id:newProjectId(), name:file.name.replace(/\.zip$/i,''), files, activeFileId:null, updatedAt: Date.now() };
+    list.push(p);
+    saveProjectsStore(list);
+    renderHome();
+    toast('Project imported: '+p.name);
+  }catch(err){ toast('Import failed: '+err.message); }
+});
+
+/* ===================== Sample welcome file ===================== */
+const DEFAULT_SAMPLE = `// Welcome to MobileCodes
+// A VS Code-style multi-language mobile code editor.
+//
+// Home screen -> your projects, each with its own files.
+// Menu (top-left)  -> Home, HTML Preview, Detect Error, Auto Delete
+//                     Error, Python Runner, Terminal, Select File,
+//                     Features & Shortcuts.
+// Menu (top-right) -> Find, Replace, Go to Line, line editing tools,
+//                     case convert, trim, sort, format, word wrap...
+//
+// Supported languages: JavaScript, TypeScript, JSX, JSON, HTML, CSS,
+// Python, XML, C, C++, Java, C#, PHP, SQL, Markdown, Shell, YAML,
+// Ruby, Go, Rust, Swift, Plain Text.
+//
+// Everything is saved locally on this device — no account needed.
+
+function greet(name) {
+  console.log("Hello, " + name + "! Start coding.");
+}
+greet("Programmer");
+`;
+
+/* ===================== Init ===================== */
+(function init(){
+  applyFont();
+  migrateOldState();
+  paintIcons();
+  buildLangPickerList();
+  renderHome();
+})();
+</script>
+</body>
+</html>
